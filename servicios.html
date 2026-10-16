@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Servicios de peluquería canina | Pituquitos Pet</title>
-<meta name="description" content="Conoce los servicios de peluquería canina de Pituquitos Pet en Coyhaique: primera peluquería, servicio completo, mantención continua y atención senior.">
+<meta name="description" content="Conoce los servicios de peluquería canina de Pituquitos Pet en Coyhaique: primera peluquería, servicio completo, mantención continua y atención para perros mayores.">
 <style>
 :root{--navy:#123d46;--teal:#1b9e9b;--pale:#eaf7f6;--ink:#29464b;--muted:#61777b;--line:#e3eeee}
 *{box-sizing:border-box}
@@ -21,45 +21,61 @@ header{border-bottom:1px solid var(--line);background:#fff}
 h1,h2,h3{color:var(--navy);line-height:1.12;margin-top:0}
 h1{font-size:clamp(2.25rem,5vw,3.6rem);letter-spacing:-.04em;margin:9px 0 12px}
 .lead{max-width:700px;font-size:1.05rem;margin:0}
-.services{padding:38px 0 44px}
+.services{padding:34px 0 38px}
+.hint{font-size:.9rem;color:var(--muted);margin:0 0 14px}
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
-.card{display:grid;grid-template-columns:1fr;overflow:hidden;border:1px solid var(--line);border-radius:18px;background:white;box-shadow:0 4px 18px #123d460a}
+.card{display:block;overflow:hidden;border:1px solid var(--line);border-radius:18px;background:white;box-shadow:0 4px 18px #123d460a}
+.card summary{display:grid;grid-template-columns:1fr;cursor:pointer;list-style:none}
+.card summary::-webkit-details-marker{display:none}
+.card summary:focus-visible{outline:3px solid var(--teal);outline-offset:-3px;border-radius:17px}
 .card img{display:block;width:100%;height:190px;object-fit:cover}
-.copy{padding:17px 19px 19px}
-h2{font-size:1.25rem;margin:0 0 8px}
-.copy p{font-size:.95rem;color:var(--muted);margin:0}
-.footer-cta{padding:24px 0 44px;text-align:center}
-.footer-cta h2{font-size:1.45rem;margin-bottom:8px}
-.footer-cta p{color:var(--muted);margin:0 0 17px}
+.copy{padding:16px 18px 18px}
+h2{font-size:1.25rem;margin:0 0 7px}
+.copy p{font-size:.93rem;color:var(--muted);margin:0}
+.toggle{display:block;color:var(--teal);font-size:.83rem;font-weight:800;margin-top:10px}
+.toggle::after{content:"  +"}
+.card[open] .toggle::after{content:"  −"}
+.detail{border-top:1px solid var(--line);padding:15px 18px 18px}
+.detail p{font-size:.9rem;line-height:1.5;margin:0 0 12px}
+.detail ul{padding-left:19px;margin:8px 0 14px;font-size:.9rem}
+.detail li{margin:4px 0}
+.more{display:inline-block;background:var(--teal);color:#fff;text-decoration:none;border-radius:99px;padding:9px 14px;font-size:.85rem;font-weight:800}
+.footer-cta{padding:18px 0 38px;text-align:center}
+.footer-cta h2{font-size:1.4rem;margin-bottom:8px}
+.footer-cta p{color:var(--muted);margin:0 0 15px}
 .button{display:inline-block;background:var(--teal);color:white;text-decoration:none;border-radius:99px;padding:12px 20px;font-weight:800}
 footer{border-top:1px solid var(--line);padding:18px 0;color:var(--muted);font-size:.82rem}
 @media(max-width:700px){
  .nav{min-height:58px}.brand img{width:38px;height:38px}
  .hero{padding:30px 0 26px}h1{font-size:clamp(2rem,8.8vw,2.55rem);margin:7px 0 9px}
  .lead{font-size:.96rem}
- .services{padding:22px 0 26px}
- .grid{grid-template-columns:1fr;gap:10px}
- .card{grid-template-columns:104px minmax(0,1fr);min-height:112px;border-radius:14px}
+ .services{padding:20px 0 22px}
+ .grid{grid-template-columns:1fr;gap:9px}
+ .card{border-radius:14px}
+ .card summary{grid-template-columns:104px minmax(0,1fr);min-height:112px}
  .card img{height:100%;min-height:112px}
- .copy{padding:12px 13px;align-self:center}
+ .copy{padding:11px 13px;align-self:center}
  h2{font-size:1rem;margin:0 0 5px}
  .copy p{font-size:.82rem;line-height:1.38}
- .footer-cta{padding:18px 0 28px}.footer-cta h2{font-size:1.2rem}
+ .toggle{font-size:.78rem;margin-top:7px}
+ .detail{padding:12px 14px 14px}
+ .detail p,.detail ul{font-size:.84rem}
+ .footer-cta{padding:14px 0 26px}.footer-cta h2{font-size:1.2rem}
  .button{padding:11px 17px;font-size:.9rem}
 }
-@media(max-width:360px){.card{grid-template-columns:88px minmax(0,1fr)}.copy{padding:10px}.copy p{font-size:.78rem}}
+@media(max-width:360px){.card summary{grid-template-columns:88px minmax(0,1fr)}.copy{padding:9px}.copy p{font-size:.78rem}}
 </style>
 </head>
 <body>
 <header><div class="wrap nav"><a class="brand" href="index.html"><img src="assets/logo-original.webp" alt=""><span>Pituquitos Pet</span></a><a class="back" href="index.html">← Volver al inicio</a></div></header>
 <main>
 <section class="hero"><div class="wrap"><div class="eyebrow">Peluquería canina en Coyhaique</div><h1>Cuidado según cada etapa.</h1><p class="lead">Adaptamos cada atención al manto, comportamiento, edad y rutina de tu perro.</p></div></section>
-<section class="services"><div class="wrap grid">
-<article class="card"><img src="assets/foto-03.webp" alt="Perro pequeño recibiendo atención en Pituquitos" loading="lazy"><div class="copy"><h2>Primera peluquería</h2><p>Una introducción progresiva al espacio, las herramientas y sus sensaciones.</p></div></article>
-<article class="card"><img src="assets/foto-21.webp" alt="Perro blanco después de su peluquería" loading="lazy"><div class="copy"><h2>Servicio completo</h2><p>Higiene y estética profesional, definidas según lo que tu perro necesita.</p></div></article>
-<article class="card"><img src="assets/foto-13.webp" alt="Perro con pañuelo después de su atención en Pituquitos" loading="lazy"><div class="copy"><h2>Mantención continua</h2><p>Seguimiento y cuidado periódico para mantener su rutina durante el año.</p></div></article>
-<article class="card"><img src="assets/foto-08.webp" alt="Peluquero acompañando con suavidad a un perro durante su atención" loading="lazy"><div class="copy"><h2>Perros mayores</h2><p>Una sesión adaptada a su tolerancia, priorizando higiene y comodidad.</p></div></article>
-</div></section>
+<section class="services"><div class="wrap"><p class="hint">Toca una foto o un servicio para conocer más.</p><div class="grid">
+<details class="card"><summary><img src="assets/foto-03.webp" alt="Perro pequeño recibiendo atención en Pituquitos" loading="lazy"><div class="copy"><h2>Primera peluquería</h2><p>Una introducción progresiva al espacio y sus sensaciones.</p><span class="toggle">Ver detalles</span></div></summary><div class="detail"><p>En su primera visita lo familiarizamos gradualmente con el espacio, las herramientas y los sonidos, respetando cómo responde durante la sesión.</p><p>El trabajo y el tiempo se adaptan a lo que pueda tolerar ese día. Buscamos que conozca la peluquería con calma y que las próximas visitas le resulten más familiares.</p><a class="more" href="https://wa.me/56939012030?text=Hola%2C%20quisiera%20saber%20m%C3%A1s%20sobre%20la%20primera%20peluquer%C3%ADa%20en%20Pituquitos%20Pet.">Consultar por WhatsApp</a></div></details>
+<details class="card"><summary><img src="assets/foto-21.webp" alt="Perro blanco después de su peluquería" loading="lazy"><div class="copy"><h2>Servicio completo</h2><p>Higiene y estética profesional según sus necesidades.</p><span class="toggle">Ver detalles</span></div></summary><div class="detail"><p>El servicio se define según el tipo y estado del manto, las preferencias conversadas y la tolerancia de tu perro.</p><ul><li>Baño, secado y cepillado.</li><li>Desenredo básico y corte a máquina o tijera, según corresponda.</li><li>Uñas, higiene externa de oídos, lagrimales y zona sanitaria.</li></ul><p>Si al revisar el manto requiere un trabajo extraordinario, te lo informamos antes de comenzar.</p><a class="more" href="https://wa.me/56939012030?text=Hola%2C%20quisiera%20consultar%20por%20el%20servicio%20completo%20para%20mi%20perro.">Consultar por WhatsApp</a></div></details>
+<details class="card"><summary><img src="assets/foto-13.webp" alt="Perro con pañuelo después de su atención en Pituquitos" loading="lazy"><div class="copy"><h2>Mantención continua</h2><p>Cuidado periódico para sostener su rutina durante el año.</p><span class="toggle">Ver detalles</span></div></summary><div class="detail"><p>Con visitas periódicas conocemos mejor sus preferencias y cómo evoluciona su manto. Eso ayuda a organizar las próximas atenciones y adaptar el cuidado a cada época del año.</p><p>La frecuencia se conversa según las necesidades de tu perro y la rutina que mejor les acomode.</p><a class="more" href="https://wa.me/56939012030?text=Hola%2C%20quisiera%20saber%20m%C3%A1s%20sobre%20la%20mantenci%C3%B3n%20continua.">Consultar por WhatsApp</a></div></details>
+<details class="card"><summary><img src="assets/foto-08.webp" alt="Peluquero acompañando con suavidad a un perro durante su atención" loading="lazy"><div class="copy"><h2>Perros mayores</h2><p>Una sesión adaptada, priorizando higiene y comodidad.</p><span class="toggle">Ver detalles</span></div></summary><div class="detail"><p>Observamos cómo se siente y ajustamos el ritmo a su tolerancia. Priorizamos la higiene y la comodidad; si lo necesita, enfocamos la sesión en lo más importante para ese día.</p><p>La seguridad y el bienestar guían cada decisión durante su atención.</p><a class="more" href="https://wa.me/56939012030?text=Hola%2C%20quisiera%20consultar%20por%20una%20atenci%C3%B3n%20para%20mi%20perro%20mayor.">Consultar por WhatsApp</a></div></details>
+</div></div></section>
 <section class="footer-cta"><div class="wrap"><h2>¿Qué atención necesita tu perro?</h2><p>Cuéntanos sobre él y te orientaremos con cariño y claridad.</p><a class="button" href="https://wa.me/56939012030?text=Hola%2C%20Pituquitos%20Pet.%20Quisiera%20consultar%20por%20la%20peluquer%C3%ADa%20de%20mi%20perro.">Consultar por WhatsApp</a></div></section>
 </main>
 <footer><div class="wrap">Pituquitos Pet · Coyhaique, Región de Aysén</div></footer>
