@@ -101,5 +101,21 @@ footer{border-top:1px solid var(--line);padding:18px 0;color:var(--muted);font-s
   window.addEventListener("hashchange",openTarget);
 })();
 </script>
+<script>
+/* Mide intentos de contacto; no confirma mensajes enviados ni reservas. */
+document.addEventListener('click',function(event){
+  var link=event.target.closest('a[href]');
+  if(!link)return;
+  var href=link.getAttribute('href')||'';
+  if(!/^https?:\/\/(?:api\.whatsapp\.com\/send|wa\.me\/)/i.test(href))return;
+  if(typeof window.gtag==='function'){
+    window.gtag('event','contact_whatsapp_click',{
+      contact_method:'whatsapp',
+      link_url:link.href,
+      page_location:location.href
+    });
+  }
+});
+</script>
 </body>
 </html>
