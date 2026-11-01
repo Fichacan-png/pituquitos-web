@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://fichacan-png.github.io/pituquitos-web/sitemap.xml
+Sitemap: https://www.pituquitospet.cl/sitemap.xml
