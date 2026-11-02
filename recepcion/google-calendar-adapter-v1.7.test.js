@@ -1,0 +1,17 @@
+'use strict';
+const test=require('node:test'),assert=require('node:assert/strict');
+const {createGoogleCalendarAdapter}=require('./google-calendar-adapter-v1.7');
+const {createGateway}=require('./calendar-readonly-gateway-v1.6');
+const base={calendarId:'private@group.calendar.google.com',timeMin:'2026-11-02T03:00:00.000Z',timeMax:'2026-12-01T03:00:00.000Z'};
+const response={ok:true,json:async()=>({items:[{id:'e1',status:'confirmed',start:{dateTime:'2026-11-03T11:00:00-03:00'}}]})};
+const adapter=(fetchImpl=async()=>response,getAccessToken=async()=> 'fake-test-token')=>createGoogleCalendarAdapter({fetchImpl,getAccessToken});
+test('GET with bearer token and minimum fields',async()=>{let req;await adapter(async(u,o)=>{req={u,o};return response}).listEvents(base);const u=new URL(req.u);assert.equal(req.o.method,'GET');assert.equal(req.o.headers.Authorization,'Bearer fake-test-token');assert.equal(u.searchParams.get('fields'),'nextPageToken,items(id,status,start(dateTime,date))');assert.equal(u.searchParams.get('singleEvents'),'true');assert.equal(u.searchParams.get('timeMin'),base.timeMin)});
+test('pagination token forwarded',async()=>{let url;await adapter(async(u)=>{url=new URL(u);return response}).listEvents({...base,pageToken:'abc'});assert.equal(url.searchParams.get('pageToken'),'abc')});
+test('missing OAuth rejects before HTTP',async()=>{let called=false;await assert.rejects(adapter(async()=>{called=true;return response},async()=>null).listEvents(base));assert.equal(called,false)});
+test('upstream unauthorized is not leaked',async()=>await assert.rejects(adapter(async()=>({ok:false,status:401})).listEvents(base),/upstream unavailable/));
+test('bad JSON shape rejects',async()=>await assert.rejects(adapter(async()=>({ok:true,json:async()=>({})})).listEvents(base),/invalid response/));
+test('invalid page size rejects',async()=>await assert.rejects(adapter().listEvents({...base,maxResults:500}),/page size/));
+test('requires injected server dependencies',()=>assert.throws(()=>createGoogleCalendarAdapter({}),/not configured/));
+test('full gateway rejects unauthorized before OAuth',async()=>{let oauth=0;const calendarClient=adapter(undefined,async()=>{oauth++;return 'x'});const gw=createGateway({authenticate:async()=>({authorized:false}),calendarClient,calendarId:base.calendarId});const result=await gw({query:{desde:'2026-11-02',hasta:'2026-11-30'}});assert.equal(result.status,401);assert.equal(oauth,0)});
+test('full gateway minimizes fields',async()=>{const calendarClient=adapter(async()=>({ok:true,json:async()=>({items:[{id:'x',summary:'Client secret',description:'Phone 123',start:{dateTime:'2026-11-03T11:00:00-03:00'}}]})}));const gw=createGateway({authenticate:async()=>({authorized:true}),calendarClient,calendarId:base.calendarId});const result=await gw({query:{desde:'2026-11-02',hasta:'2026-11-30'}});assert.equal(result.status,200);assert.equal(JSON.stringify(result).includes('Client secret'),false);assert.equal(result.body.reservas[0].identidadVerificada,false)});
+test('full gateway blocks upstream error',async()=>{const calendarClient=adapter(async()=>({ok:false,status:403}));const gw=createGateway({authenticate:async()=>({authorized:true}),calendarClient,calendarId:base.calendarId});const result=await gw({query:{desde:'2026-11-02',hasta:'2026-11-30'}});assert.equal(result.status,503)});
