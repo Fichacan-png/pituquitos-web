@@ -1,0 +1,14 @@
+'use strict';
+const test=require('node:test'),assert=require('node:assert/strict');
+const {inspectConfiguration,localUnauthorizedSmokeTest}=require('./preflight-v2.4');
+const good={OIDC_ISSUER:'https://id.example',OIDC_AUDIENCE:'recepcion',OIDC_JWKS_URL:'https://id.example/jwks',ALLOWED_SUBJECTS:'operator',GOOGLE_CALENDAR_ID:'calendar@example',GOOGLE_CLIENT_ID:'id',GOOGLE_CLIENT_SECRET:'PRIVATE_SECRET_NEVER_PRINT',GOOGLE_REFRESH_TOKEN:'PRIVATE_REFRESH_NEVER_PRINT'};
+test('missing configuration is blocked',()=>assert.equal(inspectConfiguration({}).readyForLocalTest,false));
+test('good configuration is only ready for local test',()=>{const r=inspectConfiguration(good);assert.equal(r.readyForLocalTest,true);assert.equal(r.readyForProduction,false)});
+test('rejects insecure issuer',()=>assert.equal(inspectConfiguration({...good,OIDC_ISSUER:'http://id.example'}).readyForLocalTest,false));
+test('rejects URL credentials',()=>assert.equal(inspectConfiguration({...good,OIDC_JWKS_URL:'https://user:pass@id.example/jwks'}).readyForLocalTest,false));
+test('rejects empty allowlist entries',()=>assert.equal(inspectConfiguration({...good,ALLOWED_SUBJECTS:'operator,'}).readyForLocalTest,false));
+test('rejects duplicate subjects',()=>assert.equal(inspectConfiguration({...good,ALLOWED_SUBJECTS:'operator,operator'}).readyForLocalTest,false));
+test('rejects invalid calendar id',()=>assert.equal(inspectConfiguration({...good,GOOGLE_CALENDAR_ID:'calendar id with spaces'}).readyForLocalTest,false));
+test('never returns secrets',()=>{const r=JSON.stringify(inspectConfiguration(good));assert.equal(r.includes('PRIVATE_SECRET_NEVER_PRINT'),false);assert.equal(r.includes('PRIVATE_REFRESH_NEVER_PRINT'),false)});
+test('smoke test denies anonymous user without external network',async()=>{const r=await localUnauthorizedSmokeTest(good);assert.equal(r.localSmokeTest,'passed');assert.equal(r.readyForProduction,false)});
+test('smoke test fails closed on incomplete config',async()=>assert.equal((await localUnauthorizedSmokeTest({})).localSmokeTest,'blocked'));
