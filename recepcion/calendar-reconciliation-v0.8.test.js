@@ -1,0 +1,15 @@
+const assert=require("node:assert/strict");
+const {interpretar,conciliar}=require("./calendar-reconciliation-v0.8.js");
+const ev=(id,summary,date="2026-11-14T11:00:00-03:00",description="")=>({id,summary,start:{dateTime:date},description});
+assert.deepEqual(interpretar(ev("a","Ana/Luna/pagado/30000")).perros,["Luna"]);
+assert.deepEqual(interpretar(ev("b","Ana/Luna y Sol/pagado/60000")).perros,["Luna","Sol"]);
+assert.equal(interpretar(ev("c","Ana, Luna, confirmar abono")).estado,"provisional");
+assert.equal(interpretar(ev("d","Ana/Luna","2026-11-14T11:00:00-03:00","NO ASISTIÓ")).estado,"excluir_inasistencia");
+assert.equal(interpretar(ev("e","Ana/Luna","2026-11-14T11:00:00-03:00","reagendar")).estado,"excluir_revisar");
+const datos=[ev("1","Ana/Luna/pagado/30000"),ev("1","Ana/Luna/pagado/30000"),ev("2","Ana/Sol/pendiente"),ev("3","Ana/Luna","2026-11-15T11:00:00-03:00","NO ASISTIÓ")];
+const r=conciliar(datos,[{tutor:"ANA",perro:"Lúna",fechaEvaluacion:"2026-11-02"},{tutor:"Ana",perro:"Otro",fechaEvaluacion:"2026-11-02"}]);
+assert.equal(r.resumen.eventos,3);
+assert.equal(r.decisiones[0].estadoInvitacion,"bloqueado_reserva_o_precita");
+assert.equal(r.decisiones[0].coincidencias.length,1);
+assert.equal(r.decisiones[1].estadoInvitacion,"revision_manual");
+console.log("Pruebas de conciliación v0.8: OK");
