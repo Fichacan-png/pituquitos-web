@@ -1,0 +1,14 @@
+'use strict';
+const test=require('node:test'),assert=require('node:assert/strict');
+const {createGateway}=require('./calendar-readonly-gateway-v1.4');
+const q={desde:'2026-11-02',hasta:'2026-11-30'};
+const event={id:'abc',summary:'Nombre privado',description:'Teléfono privado',start:{dateTime:'2026-11-03T11:00:00-03:00'}};
+const setup=(authorized=true,listEvents=async()=>({items:[event]}))=>createGateway({authenticate:async()=>({authorized}),calendarClient:{listEvents},calendarId:'server-side-calendar-id',clock:()=>new Date('2026-11-02T20:00:00Z')});
+test('denies unauthenticated without reading calendar',async()=>{let calls=0;const r=await setup(false,async()=>{calls++;return {items:[]}})({query:q});assert.equal(r.status,401);assert.equal(calls,0)});
+test('returns minimal fields without names or notes',async()=>{const r=await setup()({query:q});assert.equal(r.status,200);assert.equal(r.body.reservas[0].identidadVerificada,false);assert.equal(JSON.stringify(r).includes('Nombre privado'),false);assert.equal(JSON.stringify(r).includes('Teléfono privado'),false)});
+test('invalid date rejected',async()=>assert.equal((await setup()({query:{desde:'2026-02-30',hasta:'2026-03-01'}})).status,400));
+test('inverted dates rejected',async()=>assert.equal((await setup()({query:{desde:'2026-12-01',hasta:'2026-11-01'}})).status,400));
+test('oversized range rejected',async()=>assert.equal((await setup()({query:{desde:'2026-01-01',hasta:'2026-11-01'}})).status,400));
+test('calendar failure blocks',async()=>{const r=await setup(true,async()=>{throw Error('token secret')})({query:q});assert.equal(r.status,503);assert.equal(JSON.stringify(r).includes('token secret'),false)});
+test('malformed response blocks',async()=>assert.equal((await setup(true,async()=>({}))({query:q})).status,503));
+test('paginates safely',async()=>{let calls=0;const r=await setup(true,async()=>{calls++;return calls===1?{items:[event],nextPageToken:'next'}:{items:[]}})({query:q});assert.equal(r.status,200);assert.equal(calls,2)});
